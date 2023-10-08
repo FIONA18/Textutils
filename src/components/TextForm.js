@@ -31,6 +31,7 @@ export default function TextForm(props) {
         if (GetTextLength(text) > 0)
         {
             navigator.clipboard.writeText(text);
+            document.getSelection().removeAllRanges()
             props.ShowAlert("Copied to Clipboard", "success")
         }
     }
@@ -42,34 +43,35 @@ export default function TextForm(props) {
     }
     function GetTextWordLength()
     {
-        return text.length === 0 || text.trim()===''? 0: text.trim().split(" ").length
+        let length = text.split(" ").filter(x=>{return x.length!==0}).length
+        return length;
     }
     function GetTextLength()
     {
-        return text.trim()===''?0: text.length
+        return text.trim()===''?0: text.trim().length
     }
     const myStyle =
     {backgroundColor: props.mode==="dark"? "#18185a":"white", color: props.mode==="dark"? "white":"black"}
   return (
     <>
     <div className='container' style={myStyle} >
-        <h1>{props.heading}</h1>
+        <h2>{props.heading}</h2>
         <div className="mb-3">
-        <textarea className="form-control" id="myBox" rows="8" value={text} onChange={OntextChanged} style={myStyle}></textarea>
+        <textarea className="form-control" id= "myBox" rows="8" value={text} onChange={OntextChanged} style={myStyle}></textarea>
         </div>
-        <button type="button" className="btn btn-primary" onClick={OnUpperButtonClicked}>Convert to Upper Case</button>
-        <button type="button" className="btn btn-primary mx-2" onClick={OnLowerButtonClicked}>Convert to Lower Case</button>
-        <button type="button" className="btn btn-primary mx-1" onClick={OnClearButtonClicked}>Clear</button>
-        <button type="button" className="btn btn-primary mx-1" onClick={CopyTextToClickBoard}>Copy Text To Clipboard</button>
-        <button type="button" className="btn btn-primary mx-1" onClick={HandleExtraSpace}>Remove Extra Space</button>
+        <button disabled={text.length === 0} type="button" className="btn btn-primary mx-1 my-1" onClick={OnUpperButtonClicked}>Convert to Upper Case</button>
+        <button disabled={text.length === 0} type="button" className="btn btn-primary mx-1 my-1" onClick={OnLowerButtonClicked}>Convert to Lower Case</button>
+        <button disabled={text.length === 0} type="button" className="btn btn-primary mx-1 my-1" onClick={OnClearButtonClicked}>Clear</button>
+        <button disabled={text.length === 0} type="button" className="btn btn-primary mx-1 my-1" onClick={CopyTextToClickBoard}>Copy Text To Clipboard</button>
+        <button  disabled={text.length === 0} type="button" className="btn btn-primary mx-1 my-1" onClick={HandleExtraSpace}>Remove Extra Space</button>
     </div>
-    <div className='container my-3' style={myStyle}>
-        <h1>
-            Your Text Summary
-        </h1>
+     <div className='container my-3' style={myStyle}>
+        <h3>
+             Your Text Summary
+         </h3>
         <p1> {GetTextWordLength()} words and {GetTextLength()} characters</p1>
         <p>{0.008 * (GetTextWordLength())} Minutes read</p>
-        <h2>Preview</h2>
+        <h3>Preview</h3>
         <div>
         <p>{GetTextLength() > 0 ? text: "Enter some text in the Text Box above to preview it here..."}</p>
         </div>
